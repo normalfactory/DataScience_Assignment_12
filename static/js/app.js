@@ -72,7 +72,67 @@ function buildCharts(sample) {
   console.log("--> buildCharts");
 
 
+  d3.json(`/samples/${sample}`).then((sourceData) => {
+
+    console.log("Received data from endpoint");
+
+    //- Create Pie Chart
+    createPieChart(sourceData);
+
+    
+  });
+
 }
+
+
+function createPieChart(sourceData) {
+/* Creates a pie chart that contains the top 10 samples
+
+Accepts : sourceData (Dictionary) Contains data for sample from endpoint
+              "otu_ids": (int) list of IDs used as labels
+              "otu_labels": (string) list of descriptive hovertext for charts
+              "sample_values": (int) list of values
+
+Returns : undefined
+*/
+
+  //-- Get Top Samples
+  //- Combine Arrays into Object
+  let combinedSourceData = [];
+
+  for (let counter = 0; counter < sourceData["otu_ids"].length; counter++)
+  {
+    combinedSourceData.push(
+      {"otu_ids": sourceData["otu_ids"][counter],
+      "otu_labels": sourceData["otu_labels"][counter],
+      "sample_values": sourceData["sample_values"][counter]
+      });
+  }
+
+  //- Sort
+  combinedSourceData.sort((a, b) => parseFloat(b.sample_values) - parseFloat(a.sample_values));
+
+  //- Get Top 10
+  let topCombinedSourceData = combinedSourceData.slice(0, 10);
+
+
+  //-- Display Chart
+  let trace = {
+    labels: topCombinedSourceData.map(item => item.otu_ids),
+    values: topCombinedSourceData.map(item => item.sample_values),
+    hovertext: topCombinedSourceData.map(item => item.otu_labels),
+    type: "pie",
+    hoverinfo: "label+hovertext+percent+value"
+  };
+
+  let layout ={
+    title: "Top 10 Samples"
+  };
+
+  Plotly.newPlot("pie", [trace], layout);
+
+}
+
 
 
 function init() {

@@ -14,9 +14,10 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 
-#################################################
-# Database Setup
-#################################################
+
+#-- Database Setup
+print("--> Start database setup")
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/bellybutton.sqlite"
 db = SQLAlchemy(app)
@@ -31,15 +32,23 @@ Samples_Metadata = Base.classes.sample_metadata
 Samples = Base.classes.samples
 
 
+print('Completed initialization of database')
+
+
+#-- API Routes
 @app.route("/")
 def index():
     """Return the homepage."""
+    print("--> Route: Index")
+
     return render_template("index.html")
 
 
 @app.route("/names")
 def names():
     """Return a list of sample names."""
+
+    print("--> Route: Names")
 
     # Use Pandas to perform the sql query
     stmt = db.session.query(Samples).statement
@@ -52,6 +61,9 @@ def names():
 @app.route("/metadata/<sample>")
 def sample_metadata(sample):
     """Return the MetaData for a given sample."""
+
+    print("--> Route: Metadata")
+
     sel = [
         Samples_Metadata.sample,
         Samples_Metadata.ETHNICITY,
@@ -82,6 +94,9 @@ def sample_metadata(sample):
 @app.route("/samples/<sample>")
 def samples(sample):
     """Return `otu_ids`, `otu_labels`,and `sample_values`."""
+
+    print("--> Route: Samples")
+
     stmt = db.session.query(Samples).statement
     df = pd.read_sql_query(stmt, db.session.bind)
 
