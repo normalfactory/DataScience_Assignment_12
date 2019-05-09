@@ -69,6 +69,12 @@ function buildCharts(sample) {
     // HINT: You will need to use slice() to grab the top 10 sample_values,
     // otu_ids, and labels (10 each).
 
+
+// d3.csv("donuts.csv", function(error, donutData) {
+  // if (error) throw error;
+
+
+
   console.log("--> buildCharts");
 
 
@@ -79,7 +85,8 @@ function buildCharts(sample) {
     //- Create Pie Chart
     createPieChart(sourceData);
 
-    
+    //- Create Bubble Chart
+    createBubbleChart(sourceData);
   });
 
 }
@@ -133,6 +140,55 @@ Returns : undefined
 
 }
 
+
+function createBubbleChart(sourceData){
+/* Creates a bubble chart that contains all of the values provided
+
+Accepts : sourceData (Dictionary) Contains data for sample from endpoint
+              "otu_ids": (int) list of IDs used as labels
+              "otu_labels": (string) list of descriptive hovertext for charts
+              "sample_values": (int) list of values
+
+Returns : undefined
+*/
+
+  //- Prepare Hover Text
+  let hoverTextValues = [];
+
+  for (let counter = 0; counter < sourceData.otu_ids.length; counter++){
+    hoverTextValues.push(sourceData.otu_labels[counter]);
+  }
+
+
+  //- Prepare Data For Chart
+  let trace = {
+    x : sourceData.otu_ids,
+    y : sourceData.sample_values,
+    text : hoverTextValues,
+    mode : "markers",
+    marker :
+    {
+      size : sourceData.sample_values,
+      color : sourceData.otu_ids,
+      colorscale : 'Earth'
+    }
+  };
+
+  let layout = {
+    title : "Test tile",
+    showlegend : false,
+    xaxis : {
+      title : "OTU ID"
+    },
+    yaxis : {
+      title : "y axis"
+    }
+  };
+
+
+  //- Display Chart
+  Plotly.newPlot("bubble", [trace], layout);
+}
 
 
 function init() {
