@@ -14,21 +14,6 @@ function buildMetadata(sample) {
   Returns : undefined
 */
 
-  // @TODO: Complete the following function that builds the metadata panel
-
-  // Use `d3.json` to fetch the metadata for a sample
-    // Use d3 to select the panel with id of `#sample-metadata`
-
-    // Use `.html("") to clear any existing metadata
-
-    // Use `Object.entries` to add each key and value pair to the panel
-    // Hint: Inside the loop, you will need to use d3 to append new
-    // tags for each key-value in the metadata.
-
-    // BONUS: Build the Gauge Chart
-    // buildGauge(data.WFREQ);
-
-
     console.log("--> buildMetadata");
 
 
@@ -49,31 +34,21 @@ function buildMetadata(sample) {
           
           metadataDiv.append("p").text(`${key}: ${value}`)
       });
+
+
+      //- Update Frequency Chart
+      createScrubsGauge(sourceMetadata.WFREQ)
     });
 }
 
 
 function buildCharts(sample) {
-/*
+/* Create the charts based on the sample ID provided
 
   Accepts : sample (string) unique identifier of the sample to display chart for
 
   Returns : undefined
 */
-
-  // @TODO: Use `d3.json` to fetch the sample data for the plots
-
-    // @TODO: Build a Bubble Chart using the sample data
-
-    // @TODO: Build a Pie Chart
-    // HINT: You will need to use slice() to grab the top 10 sample_values,
-    // otu_ids, and labels (10 each).
-
-
-// d3.csv("donuts.csv", function(error, donutData) {
-  // if (error) throw error;
-
-
 
   console.log("--> buildCharts");
 
@@ -88,7 +63,6 @@ function buildCharts(sample) {
     //- Create Bubble Chart
     createBubbleChart(sourceData);
   });
-
 }
 
 
@@ -138,6 +112,8 @@ Returns : undefined
 
   Plotly.newPlot("pie", [trace], layout);
 
+
+  console.log("Completed pie chart");
 }
 
 
@@ -175,19 +151,21 @@ Returns : undefined
   };
 
   let layout = {
-    title : "Test tile",
+    title : "Sample Information",
     showlegend : false,
     xaxis : {
       title : "OTU ID"
     },
     yaxis : {
-      title : "y axis"
+      title : "Sample Values"
     }
   };
 
 
   //- Display Chart
   Plotly.newPlot("bubble", [trace], layout);
+
+  console.log("Completed bubble chart")
 }
 
 
@@ -219,6 +197,8 @@ function init() {
 
     console.log(`Create initial plots with first sample: ${firstSample}`);
 
+
+    //- Update Charts/Metadata
     buildCharts(firstSample);
     buildMetadata(firstSample);
   });
