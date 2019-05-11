@@ -21,6 +21,8 @@ print("--> Start database setup")
 print(f"Database url: {os.environ.get('DATABASE_URL', '')} ")
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "sqlite:///db/bellybutton.sqlite"
+
+# Just use SQLite with website deployed on Heroku; works
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/bellybutton.sqlite"
 
 print("-1 Set app.config")
